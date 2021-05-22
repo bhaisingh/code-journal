@@ -60,3 +60,7 @@ a {
   text-decoration: none;
   padding: 10px;
 }
+
+.button-new {
+  padding-top: -20px;
+}

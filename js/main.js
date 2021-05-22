@@ -5,6 +5,8 @@ const $title = document.querySelector('#title');
 const $chPhotoURL = document.querySelector('#photoURL');
 const $notes = document.querySelector('#notes');
 const $imgSrc = document.querySelector('.image-entry');
+const $entriesDisplay = document.querySelector('[data-view="entries"]');
+const $entriesAdd = document.querySelector('[data-view="entry-form"]');
 
 $chPhotoURL.addEventListener('input', function (e) {
   $imgSrc.setAttribute('src', $chPhotoURL.value);
@@ -23,3 +25,23 @@ $saveJournal.addEventListener('submit', function (e) {
   $saveJournal.reset();
   $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
 });
+
+const $entryPage = document.querySelector('.entry-page');
+const $buttonNew = document.querySelector('.button-new');
+document.addEventListener('click', function (e) {
+  if (e.target === $entryPage) {
+    renderEntryPage();
+  } else if (e.target === $buttonNew) {
+    renderNewEntryPage();
+  }
+});
+
+function renderEntryPage() {
+  $entriesDisplay.className = 'entries';
+  $entriesAdd.className = 'create-entry hidden';
+}
+
+function renderNewEntryPage() {
+  $entriesDisplay.className = 'entries hidden';
+  $entriesAdd.className = 'create-entry';
+}
