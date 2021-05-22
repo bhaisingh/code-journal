@@ -46,8 +46,4 @@ input {
   .column-half {
     width: 50%;
   }
-
-  header {
-    padding: 0 13rem;
-  }
 }
