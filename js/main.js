@@ -25,24 +25,38 @@ $saveJournal.addEventListener('submit', function (e) {
   data.entries.unshift(formObject);
   $saveJournal.reset();
   $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
+  renderEntriesPage();
 });
 
 const $entryPage = document.querySelector('.entry-page');
 const $buttonNew = document.querySelector('.button-new');
 document.addEventListener('click', function (e) {
   if (e.target === $entryPage) {
+
     renderEntriesPage();
   } else if (e.target === $buttonNew) {
     renderNewEntryPage();
   }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  $entriesDisplay.className = 'entries';
+  $entriesAdd.className = 'create-entry hidden';
+  $unorderEntry.innerHTML = ' ';
+  if (data.nextEntryId > 1) {
+    for (let i = 0; i < data.entries.length; i++) {
+      buildEntriesDomObject(data.entries[i]);
+    }
+  }
+});
+
 function renderEntriesPage() {
   $entriesDisplay.className = 'entries';
   $entriesAdd.className = 'create-entry hidden';
+  $unorderEntry.innerHTML = ' ';
   if (data.nextEntryId > 1) {
-    for (let i = 0; i < data.length; i++) {
-      buildEntriesDomObject(data[i]);
+    for (let i = 0; i < data.entries.length; i++) {
+      buildEntriesDomObject(data.entries[i]);
     }
   }
 }
@@ -50,6 +64,7 @@ function renderEntriesPage() {
 function renderNewEntryPage() {
   $entriesDisplay.className = 'entries hidden';
   $entriesAdd.className = 'create-entry';
+  $unorderEntry.innerHTML = ' ';
 }
 
 function buildEntriesDomObject(entryObject) {
@@ -60,13 +75,31 @@ function buildEntriesDomObject(entryObject) {
   row.setAttribute('class', 'row');
   $unorderEntry.appendChild(row);
 
-  const colHalf = document.createElement('div');
+  let colHalf = document.createElement('div');
   colHalf.setAttribute('class', 'column-half');
-  row.appendChild(colHalf);
 
   const image = document.createElement('img');
   image.setAttribute('src', entryObject.PhotoURL);
   image.setAttribute('class', 'image');
   colHalf.appendChild(image);
+  row.appendChild(colHalf);
 
+  colHalf = document.createElement('div');
+  colHalf.setAttribute('class', 'column-half');
+
+  let rowalignHoriz = document.createElement('div');
+  rowalignHoriz.setAttribute('class', 'row-align-horiz');
+  const h3 = document.createElement('h3');
+  h3.textContent = entryObject.title;
+  rowalignHoriz.appendChild(h3);
+  colHalf.appendChild(rowalignHoriz);
+
+  rowalignHoriz = document.createElement('div');
+  rowalignHoriz.setAttribute('class', 'row-align-horiz');
+  const p = document.createElement('p');
+  p.textContent = entryObject.notes;
+  rowalignHoriz.appendChild(p);
+  colHalf.appendChild(rowalignHoriz);
+
+  row.appendChild(colHalf);
 }
