@@ -5,7 +5,6 @@ header {
   font-size: 20px;
   color: white;
   background-color: rgb(80, 9, 146);
-  padding: 0 1.5rem;
 }
 
 input,
@@ -48,6 +47,26 @@ label {
   margin: 2px;
 }
 
-.image-entry {
-  height: 350px;
+.image-entry,
+.image {
+  max-width: 100%;
+  max-height: 500px;
+}
+
+header > p {
+  margin-left: 30px;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.button-new {
+  padding-top: -20px;
+}
+
+ul {
+  list-style-type: none;
 }
