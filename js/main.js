@@ -30,9 +30,14 @@ $saveJournal.addEventListener('submit', function (e) {
     $saveJournal.reset();
     $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
   } else if (editAddMode === 'edit-mode') {
-    data.entries[data.entries.length - editEntryvalue].title = $title.value;
-    data.entries[data.entries.length - editEntryvalue].notes = $notes.value;
-    data.entries[data.entries.length - editEntryvalue].PhotoURL = $chPhotoURL.value;
+    for (let i = 0; i < data.entries.length; i++) {
+      if (parseInt(editEntryvalue) === parseInt(data.entries[i].EntryId)) {
+        data.entries[i].title = $title.value;
+        data.entries[i].notes = $notes.value;
+        data.entries[i].PhotoURL = $chPhotoURL.value;
+        break;
+      }
+    }
     $saveJournal.reset();
     $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
   }
@@ -106,10 +111,15 @@ function renderEditEntryPage() {
   $entriesAdd.className = 'create-entry';
   $unorderEntry.innerHTML = ' ';
   $titleh1.textContent = 'Edit Entry';
-  $title.value = data.entries[data.entries.length - editEntryvalue].title;
-  $notes.value = data.entries[data.entries.length - editEntryvalue].notes;
-  $chPhotoURL.value = data.entries[data.entries.length - editEntryvalue].PhotoURL;
-  $imgSrc.setAttribute('src', data.entries[data.entries.length - editEntryvalue].PhotoURL);
+  for (let i = 0; i < data.entries.length; i++) {
+    if (parseInt(editEntryvalue) === parseInt(data.entries[i].EntryId)) {
+      $title.value = data.entries[i].title;
+      $notes.value = data.entries[i].notes;
+      $chPhotoURL.value = data.entries[i].PhotoURL;
+      $imgSrc.setAttribute('src', data.entries[i].PhotoURL);
+      break;
+    }
+  }
   $deleteEntry.setAttribute('class', 'deleteEntry');
   $columnButton.style.justifyContent = 'space-between';
 }
