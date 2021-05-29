@@ -41,6 +41,8 @@ $saveJournal.addEventListener('submit', function (e) {
 
 const $entryPage = document.querySelector('.entry-page');
 const $buttonNew = document.querySelector('.button-new');
+const $deleteEntry = document.querySelector('.deleteEntry');
+const $columnButton = document.querySelector('.column-button');
 
 document.addEventListener('click', function (e) {
   if (e.target === $entryPage) {
@@ -53,6 +55,8 @@ document.addEventListener('click', function (e) {
     editAddMode = 'edit-mode';
     editEntryvalue = e.target.getAttribute('data-entry-id');
     renderEditEntryPage(editEntryvalue);
+  } else if (e.target === $deleteEntry) {
+    alert('I am in delete entry');
   }
 });
 
@@ -85,6 +89,8 @@ function renderNewEntryPage() {
   $saveJournal.reset();
   $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
   $titleh1.textContent = 'New Entry';
+  $deleteEntry.setAttribute('class', 'deleteEntry hidden');
+  $columnButton.setAttribute('style', 'justify-content: flex-end');
 }
 
 function renderEditEntryPage(targetEditId) {
@@ -96,6 +102,8 @@ function renderEditEntryPage(targetEditId) {
   $notes.value = data.entries[data.entries.length - targetEditId].notes;
   $chPhotoURL.value = data.entries[data.entries.length - targetEditId].PhotoURL;
   $imgSrc.setAttribute('src', data.entries[data.entries.length - targetEditId].PhotoURL);
+  $deleteEntry.setAttribute('class', 'deleteEntry');
+  $columnButton.setAttribute('style', 'justify-content: space-between');
 }
 
 function buildEntriesDomObject(entryObject) {

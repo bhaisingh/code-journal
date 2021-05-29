@@ -74,3 +74,8 @@ ul {
 i {
   cursor: pointer;
 }
+
+.deleteEntry {
+  color: lightcoral;
+  text-decoration: underline;
+}
