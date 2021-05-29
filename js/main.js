@@ -57,7 +57,7 @@ document.addEventListener('click', function (e) {
   } else if (e.target.closest('.fa-pen') !== null) {
     editAddMode = 'edit-mode';
     editEntryvalue = e.target.getAttribute('data-entry-id');
-    renderEditEntryPage(editEntryvalue);
+    renderEditEntryPage();
   } else if (e.target === $deleteEntry) {
     renderModalPage();
   } else if (e.target === $noButton) {
@@ -101,15 +101,15 @@ function renderNewEntryPage() {
   $columnButton.style.justifyContent = 'flex-end';
 }
 
-function renderEditEntryPage(targetEditId) {
+function renderEditEntryPage() {
   $entriesDisplay.className = 'entries hidden';
   $entriesAdd.className = 'create-entry';
   $unorderEntry.innerHTML = ' ';
   $titleh1.textContent = 'Edit Entry';
-  $title.value = data.entries[data.entries.length - targetEditId].title;
-  $notes.value = data.entries[data.entries.length - targetEditId].notes;
-  $chPhotoURL.value = data.entries[data.entries.length - targetEditId].PhotoURL;
-  $imgSrc.setAttribute('src', data.entries[data.entries.length - targetEditId].PhotoURL);
+  $title.value = data.entries[data.entries.length - editEntryvalue].title;
+  $notes.value = data.entries[data.entries.length - editEntryvalue].notes;
+  $chPhotoURL.value = data.entries[data.entries.length - editEntryvalue].PhotoURL;
+  $imgSrc.setAttribute('src', data.entries[data.entries.length - editEntryvalue].PhotoURL);
   $deleteEntry.setAttribute('class', 'deleteEntry');
   $columnButton.style.justifyContent = 'space-between';
 }
