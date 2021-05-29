@@ -43,6 +43,9 @@ const $entryPage = document.querySelector('.entry-page');
 const $buttonNew = document.querySelector('.button-new');
 const $deleteEntry = document.querySelector('.deleteEntry');
 const $columnButton = document.querySelector('.column-button');
+const $noButton = document.querySelector('.noButton');
+const $yesButton = document.querySelector('.yesButton');
+const $modalPage = document.querySelector('.modal');
 
 document.addEventListener('click', function (e) {
   if (e.target === $entryPage) {
@@ -56,7 +59,12 @@ document.addEventListener('click', function (e) {
     editEntryvalue = e.target.getAttribute('data-entry-id');
     renderEditEntryPage(editEntryvalue);
   } else if (e.target === $deleteEntry) {
-    alert('I am in delete entry');
+    renderModalPage();
+  } else if (e.target === $noButton) {
+    $modalPage.style.display = 'none';
+  } else if (e.target === $yesButton) {
+    removeEntryFromStorage();
+    renderEntriesPage();
   }
 });
 
@@ -75,7 +83,7 @@ function renderEntriesPage() {
   $entriesDisplay.className = 'entries';
   $entriesAdd.className = 'create-entry hidden';
   $unorderEntry.innerHTML = ' ';
-  if (data.nextEntryId > 1) {
+  if (data.entries.length >= 1) {
     for (let i = 0; i < data.entries.length; i++) {
       buildEntriesDomObject(data.entries[i]);
     }
@@ -90,7 +98,7 @@ function renderNewEntryPage() {
   $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
   $titleh1.textContent = 'New Entry';
   $deleteEntry.setAttribute('class', 'deleteEntry hidden');
-  $columnButton.setAttribute('style', 'justify-content: flex-end');
+  $columnButton.style.justifyContent = 'flex-end';
 }
 
 function renderEditEntryPage(targetEditId) {
@@ -103,7 +111,21 @@ function renderEditEntryPage(targetEditId) {
   $chPhotoURL.value = data.entries[data.entries.length - targetEditId].PhotoURL;
   $imgSrc.setAttribute('src', data.entries[data.entries.length - targetEditId].PhotoURL);
   $deleteEntry.setAttribute('class', 'deleteEntry');
-  $columnButton.setAttribute('style', 'justify-content: space-between');
+  $columnButton.style.justifyContent = 'space-between';
+}
+
+function renderModalPage() {
+  $modalPage.style.display = 'block';
+}
+
+function removeEntryFromStorage() {
+  $modalPage.style.display = 'none';
+  for (let i = 0; i < data.entries.length; i++) {
+    if (parseInt(editEntryvalue) === parseInt(data.entries[i].EntryId)) {
+      data.entries.splice(i, 1);
+      break;
+    }
+  }
 }
 
 function buildEntriesDomObject(entryObject) {
