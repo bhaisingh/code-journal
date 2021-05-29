@@ -8,6 +8,9 @@ const $imgSrc = document.querySelector('.image-entry');
 const $entriesDisplay = document.querySelector('[data-view="entries"]');
 const $entriesAdd = document.querySelector('[data-view="entry-form"]');
 const $unorderEntry = document.querySelector('.entry-Unordered-list');
+const $titleh1 = document.querySelector('.NewEntry');
+let editAddMode = '';
+let editEntryvalue = 0;
 
 $chPhotoURL.addEventListener('input', function (e) {
   $imgSrc.setAttribute('src', $chPhotoURL.value);
@@ -16,26 +19,40 @@ $chPhotoURL.addEventListener('input', function (e) {
 const $saveJournal = document.querySelector('#Form');
 $saveJournal.addEventListener('submit', function (e) {
   e.preventDefault();
-  const formObject = {};
-  formObject.title = $title.value;
-  formObject.PhotoURL = $chPhotoURL.value;
-  formObject.notes = $notes.value;
-  formObject.EntryId = data.nextEntryId;
-  data.nextEntryId = data.nextEntryId + 1;
-  data.entries.unshift(formObject);
-  $saveJournal.reset();
-  $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
+  if (editAddMode === 'Add-mode') {
+    const formObject = {};
+    formObject.title = $title.value;
+    formObject.PhotoURL = $chPhotoURL.value;
+    formObject.notes = $notes.value;
+    formObject.EntryId = data.nextEntryId;
+    data.nextEntryId = data.nextEntryId + 1;
+    data.entries.unshift(formObject);
+    $saveJournal.reset();
+    $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
+  } else if (editAddMode === 'edit-mode') {
+    data.entries[data.entries.length - editEntryvalue].title = $title.value;
+    data.entries[data.entries.length - editEntryvalue].notes = $notes.value;
+    data.entries[data.entries.length - editEntryvalue].PhotoURL = $chPhotoURL.value;
+    $saveJournal.reset();
+    $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
+  }
   renderEntriesPage();
 });
 
 const $entryPage = document.querySelector('.entry-page');
 const $buttonNew = document.querySelector('.button-new');
+
 document.addEventListener('click', function (e) {
   if (e.target === $entryPage) {
-
+    editAddMode = ' ';
     renderEntriesPage();
   } else if (e.target === $buttonNew) {
+    editAddMode = 'Add-mode';
     renderNewEntryPage();
+  } else if (e.target.closest('.fa-pen') !== null) {
+    editAddMode = 'edit-mode';
+    editEntryvalue = e.target.getAttribute('data-entry-id');
+    renderEditEntryPage(editEntryvalue);
   }
 });
 
@@ -65,6 +82,20 @@ function renderNewEntryPage() {
   $entriesDisplay.className = 'entries hidden';
   $entriesAdd.className = 'create-entry';
   $unorderEntry.innerHTML = ' ';
+  $saveJournal.reset();
+  $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
+  $titleh1.textContent = 'New Entry';
+}
+
+function renderEditEntryPage(targetEditId) {
+  $entriesDisplay.className = 'entries hidden';
+  $entriesAdd.className = 'create-entry';
+  $unorderEntry.innerHTML = ' ';
+  $titleh1.textContent = 'Edit Entry';
+  $title.value = data.entries[data.entries.length - targetEditId].title;
+  $notes.value = data.entries[data.entries.length - targetEditId].notes;
+  $chPhotoURL.value = data.entries[data.entries.length - targetEditId].PhotoURL;
+  $imgSrc.setAttribute('src', data.entries[data.entries.length - targetEditId].PhotoURL);
 }
 
 function buildEntriesDomObject(entryObject) {
@@ -92,6 +123,10 @@ function buildEntriesDomObject(entryObject) {
   const h3 = document.createElement('h3');
   h3.textContent = entryObject.title;
   rowalignHoriz.appendChild(h3);
+  const icon = document.createElement('i');
+  icon.setAttribute('class', 'fas fa-pen');
+  icon.setAttribute('data-entry-id', entryObject.EntryId);
+  rowalignHoriz.appendChild(icon);
   colHalf.appendChild(rowalignHoriz);
 
   rowalignHoriz = document.createElement('div');
@@ -102,4 +137,5 @@ function buildEntriesDomObject(entryObject) {
   colHalf.appendChild(rowalignHoriz);
 
   row.appendChild(colHalf);
+  listItem.appendChild(row);
 }
