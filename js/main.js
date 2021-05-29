@@ -20,7 +20,6 @@ const $saveJournal = document.querySelector('#Form');
 $saveJournal.addEventListener('submit', function (e) {
   e.preventDefault();
   if (editAddMode === 'Add-mode') {
-    alert('In add mode');
     const formObject = {};
     formObject.title = $title.value;
     formObject.PhotoURL = $chPhotoURL.value;
@@ -44,7 +43,6 @@ const $entryPage = document.querySelector('.entry-page');
 const $buttonNew = document.querySelector('.button-new');
 
 document.addEventListener('click', function (e) {
-
   if (e.target === $entryPage) {
     editAddMode = ' ';
     renderEntriesPage();
