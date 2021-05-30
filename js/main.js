@@ -30,9 +30,14 @@ $saveJournal.addEventListener('submit', function (e) {
     $saveJournal.reset();
     $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
   } else if (editAddMode === 'edit-mode') {
-    data.entries[data.entries.length - editEntryvalue].title = $title.value;
-    data.entries[data.entries.length - editEntryvalue].notes = $notes.value;
-    data.entries[data.entries.length - editEntryvalue].PhotoURL = $chPhotoURL.value;
+    for (let i = 0; i < data.entries.length; i++) {
+      if (parseInt(editEntryvalue) === parseInt(data.entries[i].EntryId)) {
+        data.entries[i].title = $title.value;
+        data.entries[i].notes = $notes.value;
+        data.entries[i].PhotoURL = $chPhotoURL.value;
+        break;
+      }
+    }
     $saveJournal.reset();
     $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
   }
@@ -41,6 +46,11 @@ $saveJournal.addEventListener('submit', function (e) {
 
 const $entryPage = document.querySelector('.entry-page');
 const $buttonNew = document.querySelector('.button-new');
+const $deleteEntry = document.querySelector('.deleteEntry');
+const $columnButton = document.querySelector('.column-button');
+const $noButton = document.querySelector('.noButton');
+const $yesButton = document.querySelector('.yesButton');
+const $modalPage = document.querySelector('.modal');
 
 document.addEventListener('click', function (e) {
   if (e.target === $entryPage) {
@@ -52,7 +62,14 @@ document.addEventListener('click', function (e) {
   } else if (e.target.closest('.fa-pen') !== null) {
     editAddMode = 'edit-mode';
     editEntryvalue = e.target.getAttribute('data-entry-id');
-    renderEditEntryPage(editEntryvalue);
+    renderEditEntryPage();
+  } else if (e.target === $deleteEntry) {
+    renderModalPage();
+  } else if (e.target === $noButton) {
+    $modalPage.style.display = 'none';
+  } else if (e.target === $yesButton) {
+    removeEntryFromStorage();
+    renderEntriesPage();
   }
 });
 
@@ -71,7 +88,7 @@ function renderEntriesPage() {
   $entriesDisplay.className = 'entries';
   $entriesAdd.className = 'create-entry hidden';
   $unorderEntry.innerHTML = ' ';
-  if (data.nextEntryId > 1) {
+  if (data.entries.length >= 1) {
     for (let i = 0; i < data.entries.length; i++) {
       buildEntriesDomObject(data.entries[i]);
     }
@@ -85,17 +102,40 @@ function renderNewEntryPage() {
   $saveJournal.reset();
   $imgSrc.setAttribute('src', 'images/placeholder-image-square.jpg');
   $titleh1.textContent = 'New Entry';
+  $deleteEntry.setAttribute('class', 'deleteEntry hidden');
+  $columnButton.style.justifyContent = 'flex-end';
 }
 
-function renderEditEntryPage(targetEditId) {
+function renderEditEntryPage() {
   $entriesDisplay.className = 'entries hidden';
   $entriesAdd.className = 'create-entry';
   $unorderEntry.innerHTML = ' ';
   $titleh1.textContent = 'Edit Entry';
-  $title.value = data.entries[data.entries.length - targetEditId].title;
-  $notes.value = data.entries[data.entries.length - targetEditId].notes;
-  $chPhotoURL.value = data.entries[data.entries.length - targetEditId].PhotoURL;
-  $imgSrc.setAttribute('src', data.entries[data.entries.length - targetEditId].PhotoURL);
+  for (let i = 0; i < data.entries.length; i++) {
+    if (parseInt(editEntryvalue) === parseInt(data.entries[i].EntryId)) {
+      $title.value = data.entries[i].title;
+      $notes.value = data.entries[i].notes;
+      $chPhotoURL.value = data.entries[i].PhotoURL;
+      $imgSrc.setAttribute('src', data.entries[i].PhotoURL);
+      break;
+    }
+  }
+  $deleteEntry.setAttribute('class', 'deleteEntry');
+  $columnButton.style.justifyContent = 'space-between';
+}
+
+function renderModalPage() {
+  $modalPage.style.display = 'block';
+}
+
+function removeEntryFromStorage() {
+  $modalPage.style.display = 'none';
+  for (let i = 0; i < data.entries.length; i++) {
+    if (parseInt(editEntryvalue) === parseInt(data.entries[i].EntryId)) {
+      data.entries.splice(i, 1);
+      break;
+    }
+  }
 }
 
 function buildEntriesDomObject(entryObject) {
